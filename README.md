@@ -11,7 +11,7 @@ Clones the GitHub repos you own that you don't have yet. Pulls the ones you do. 
 ## Use
 
 ```bash
-bash sync-repos.sh            # syncs ~/gits
+bash sync-repos.sh            # syncs your repo folder
 bash sync-repos.sh ~/code     # any other folder
 bash sync-repos.sh -n         # dry run, changes nothing
 ```
@@ -23,7 +23,7 @@ bash sync-repos.sh -n         # dry run, changes nothing
 | `--no-archived` | skips archived repos |
 | `-n`, `--dry-run` | shows what it would do, does nothing |
 
-`REPOS_DIR` changes the default folder.
+Folder: paste it between the quotes of `REPO_DIR_CUSTOM=""` at the top of the script. Empty? It uses `$REPOS_DIR`, else `~/gits`.
 
 ## It won't
 

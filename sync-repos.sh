@@ -6,10 +6,14 @@ if [ -f "$0" ] && grep -q $'\r' "$0"; then                                      
   echo "can't fix CRLF line ends in $0" >&2; exit 1                                       #
 fi                                                                                        #
 
+# SET : paste repo dir between " " (empty = $REPOS_DIR, else ~/gits)
+REPO_DIR_CUSTOM=""
+
 set -uo pipefail
 (( BASH_VERSINFO[0] >= 4 )) || { echo "needs bash 4+" >&2; exit 1; }
 
-DEST=${REPOS_DIR:-$HOME/gits}                     # location of git repos (self-explanatory)
+REPO_DIR=${REPO_DIR_CUSTOM:-${REPOS_DIR:-$HOME/gits}}
+DEST=$REPO_DIR                                    # location of git repos (self-explanatory)
 API=${GITHUB_API_URL:-https://api.github.com}
 PROTO='' NO_FORKS=0 NO_ARCHIVED=0 DRY=0
 
@@ -21,7 +25,7 @@ Clones every GitHub repository you own that is not in the folder yet;
 pulls the ones that are. Pulls only fast-forward: (i.e. a copy with commits of its
 own, OR w uncommitted changes in the way, is reported/announced and left alone).
 
-  folder          repo location (default: ~/gits, or \$REPOS_DIR)
+  folder          repo location (default: $REPO_DIR)
   --ssh           clone over SSH (git@github.com:...)
   --https         clone over HTTPS (default, unless gh is set to SSH)
   --no-forks      leave forks out
@@ -51,6 +55,9 @@ while (( $# )); do
   esac
   shift
 done
+# shellcheck disable=SC2088  # literal ~ on purpose
+case $DEST in '~'|'~/'*) DEST=$HOME${DEST:1} ;; esac               # ~ in quotes -> $HOME
+command -v cygpath >/dev/null 2>&1 && DEST=$(cygpath -u "$DEST")   # Git Bash: C:\x -> /c/x
 [ "$DEST" = / ] || DEST=${DEST%/}
 command -v git >/dev/null 2>&1 || die "git not installed"
 
