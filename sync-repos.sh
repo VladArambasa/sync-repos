@@ -17,7 +17,7 @@ DEST=$REPO_DIR                                    # location of git repos (self-
 API=${GITHUB_API_URL:-https://api.github.com}
 PROTO='' NO_FORKS=0 NO_ARCHIVED=0 DRY=0
 
-usage() {
+usage() { # AI wrote this. Idc ab user intelligibility but it is necessary. The Slave does it, not the master! HUZZAH!
   cat <<EOF
 Usage: bash ${0##*/} [options] [folder]
 
